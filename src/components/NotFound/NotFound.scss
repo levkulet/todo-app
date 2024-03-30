@@ -1,0 +1,41 @@
+.not-found-container {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 6px;
+    background-color: #f4f4f4;
+    width: 100%;
+}
+
+.not-found-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    color: #e53170;
+    margin-bottom: 20px;
+}
+
+.not-found-paragraph {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.not-found-link {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #ff8906;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #0f0e17;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .not-found-container {
+        padding: 12px;
+    }
+}

@@ -1,0 +1,133 @@
+form {
+    background-color: #0f0e17;
+    padding: 20px;
+    margin-top: 0;
+    justify-content: space-between;
+    align-items: baseline;
+    border: solid 5px black;
+    border-radius: 8px;
+    width: 100%;
+
+    .addTaskHeader {
+        padding: 0;
+        margin: 0;
+        padding-bottom: 15px;
+        display: flex;
+        align-items: center;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #fffffe;
+        text-decoration: underline;
+        margin-bottom: 5px;
+
+        svg {
+            margin-right: 8px;
+            color: #ff8906;
+        }
+    }
+
+    .errorMessage {
+        padding-bottom: 15px;
+        font-family: 'Poppins', sans-serif;
+        color: #e53170;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 16px;
+
+        svg {
+            margin-top: 2px;
+            margin-left: 6px;
+            color: #fffffe;
+        }
+    }
+
+    .formLabel {
+        padding-bottom: 15px;
+        font-family: 'Poppins', sans-serif;
+        color: #a7a9be;
+        font-weight: 400;
+        font-size: 16px;
+
+        svg {
+            margin-right: 6px;
+            color: #fffffe;
+        }
+    }
+
+    .formInputDescription {
+        width: 80%;
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .formInputStatus {
+        width: 50%;
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #fff;
+        color: #333;
+    }
+
+
+    .taskOpen {
+        font-family: 'Poppins', sans-serif;
+        color: #f25f4c;
+        font-weight: 600;
+        font-style: italic;
+        font-size: 16px;
+
+        svg {
+            margin-top: 2px;
+            margin-left: 6px;
+            color: #fffffe;
+        }
+    }
+
+    .taskCompleted {
+        font-family: 'Poppins', sans-serif;
+        color: #00473e;
+        font-weight: 600;
+        font-size: 16px;
+
+        svg {
+            margin-top: 2px;
+            margin-left: 6px;
+            color: #fffffe;
+        }
+    }
+
+    .buttonAdd {
+        margin-top: 10px;
+        padding: 8px 26px;
+        color: #fffffe;
+        background-color: #ff8906;
+        border: solid 2px black;
+        border-radius: 4px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+
+    .addTaskHeader {
+        font-size: 24px;
+    }
+
+}
+
+@media only screen and (max-width: 767px) {
+    form {
+        margin-top: 15px;
+    }
+
+    .formInputDescription,
+    .formInputStatus {
+        width: 100%;
+    }
+}

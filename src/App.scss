@@ -1,0 +1,17 @@
+
+.container {
+    padding: 20px;
+    margin: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* .container > div {
+    flex-grow: 0; /* Ensure the divs don't grow to fill available space 
+} */
+
+/* @media only screen and (max-width: 767px) {
+    .container {
+    }
+} */
