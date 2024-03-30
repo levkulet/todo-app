@@ -1,13 +1,14 @@
 import { useState } from "react";
 import './Form.scss';
 import { MdAddTask} from 'react-icons/md';
+import { addDoc } from "firebase/firestore";
+import { dbTasksCollection } from "../../utils/api/firebaseConfig";
 
 function Form({ onAddTask }) {
 
     const [description, setDescription] = useState('');
-    const [status, setStatus] = useState('open');
+    const [done, setDone] = useState('open');
     const [errorMessage, setErrorMessage] = useState('');
-
 
     const handleFormSubmission = (event) => {
         event.preventDefault();
@@ -16,14 +17,19 @@ function Form({ onAddTask }) {
             setErrorMessage('Please enter a description!');
         }
         else {
+            //adding task
+            
+            const newTask = {description,done};
 
-            onAddTask(description, status);
+            addDoc(dbTasksCollection, newTask).then((docRef) => {
+                console.log('Task Added:', docRef);
+                onAddTask({ id: docRef.id, description,done });
 
-            //reset form
+            //reset formƒ
             setDescription('')
-            setStatus('open');
-
+            setDone('open');
             setErrorMessage('');
+            })
         }
     }
 
@@ -59,8 +65,8 @@ function Form({ onAddTask }) {
                 Status:
 
                 <select
-                    value={status}
-                    onChange={(event) => setStatus(event.target.value)}
+                    value={done}
+                    onChange={(event) => setDone(event.target.value)}
                     className="formInputStatus"
                 >
                     <option value="open" className="taskOpen"> Open</option>

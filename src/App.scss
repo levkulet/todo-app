@@ -7,6 +7,17 @@
     align-items: center;
 }
 
+.loading {
+    //display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 32px;
+    color: #333;
+    //background-color: #f8f8f8;
+  }
+  
+
 /* .container > div {
     flex-grow: 0; /* Ensure the divs don't grow to fill available space 
 } */
