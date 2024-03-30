@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import uuid from "react-uuid";
+import { useState, useEffect } from 'react';
+//import uuid from "react-uuid";
 import Header from './components/Header/Header.js';
 import Tasks from './components/Tasks/Tasks.js';
 import Form from './components/Form/Form.js';
@@ -12,121 +12,136 @@ import HelpIntro from './components/Help/HelpIntro.js';
 import HelpRemove from './components/Help/HelpRemove.js';
 import HelpStatus from './components/Help/HelpStatus.js';
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-//import { getFirestore } from 'firebase/firestore';
-import { getFirestore, collection, getDocs }
-from 'firebase/firestore';
+import CustomAlert from './components/CustomAlert/CustomAlert.js';
 
+//import { initializeApp } from "firebase/app";
+import { collection, getDocs, getDoc, addDoc, doc, setDoc, deleteDoc }
+  from 'firebase/firestore';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDEhWOmf5jcTUE28uukfsSEeoR-jsMIWp0",
-  authDomain: "todo-app-4c857.firebaseapp.com",
-  projectId: "todo-app-4c857",
-  storageBucket: "todo-app-4c857.appspot.com",
-  messagingSenderId: "83655961795",
-  appId: "1:83655961795:web:f807c8604ef572c114c676",
-  measurementId: "G-5KYW022RKL"
-};
-
-
-const dbCollection = collection(db, 'users');
-getDocs(dbCollection)
-.then((querySnapshot) => {
-querySnapshot.forEach((doc) => {
-console.log(doc.id, doc.data());
-});
-})
-.catch((error) => {
-console.log('Error:', error);
-});
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
+import { db } from './utils/api/firebaseConfig.js';
 
 
 function App() {
+  const [message, setMessage] = useState('');
 
-  const
-    [tasks, setTasks] = useState
-      (
-        [
-          {
-            id: uuid(),
-            description: "Clean Kitchen"
-            ,
-            done: true
-          }, {
-            id: uuid(),
-            description: "Wash the dishes"
-            ,
-            done: false
-          }, {
-            id: uuid(),
-            description: "Shovel Snow"
-            ,
-            done: false
-          }
-        ]
-      );
+  const [tasks, setTasks] = useState([]);
 
-  // Removes all tasks form the list.
-  const handleClearTasks = () => {
-    setTasks([]);
-  }
+  useEffect(() => {
+    setMessage('Loading...');
 
-  // Toggles a task status.
-  const handleStatusChange = (id) => {
-    const updatedTasks = [...tasks];
-    updatedTasks
-      .forEach((task) => {
-        if
-          (task
-            .id === id) {
-          task
-            .done = !task
-              .done
-            ;
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'tasks'));
+        const tasksData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log("Tasks data from Firestore:", tasksData);
+
+        if (tasksData.length === 0) {
+          setMessage("There's no tasks to load. Try adding a task!");
+        } else {
+          setTasks(tasksData);
+          setMessage('Tasks loaded!');
         }
-      });
-    setTasks
-      (updatedTasks);
-  }
 
-  // Removes a task from the list.
-  const handleTaskRemove = (id) => {
-    const filteredTasks = tasks.filter(
-      (task) => task.id !== id
-    );
-    setTasks(filteredTasks);
-  }
+        setTimeout(() => {
+          setMessage('');
+        }, 3000); // Hide the alert after 3 seconds
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        setMessage('Error fetching tasks:', error);
+        setTimeout(() => {
+          setMessage('');
+        }, 3000); // Hide the alert after 3 seconds
+      }
+    };
 
-  // Adds a task.
-  const handleAddTask = (description, status) => {
-    setTasks([
-      ...tasks,
-      {
-        id: uuid(),
+    fetchData();
+  }, []);
+
+
+  // Removes all tasks from the list and updates Firestore.
+  const handleClearTasks = async () => {
+    try {
+      await Promise.all(tasks.map(async (task) => {
+        await deleteDoc(doc(db, 'tasks', task.id));
+      }));
+      setTasks([]);
+      setMessage('Clearing... Tasks cleared!');
+      setTimeout(() => {
+        setMessage('');
+      }, 3000); // Hide the alert after 3 seconds
+    } catch (error) {
+      console.error('Error clearing tasks:', error);
+    }
+  };
+
+  // Toggles a task status and updates Firestore.
+  const handleStatusChange = async (id) => {
+    try {
+      const taskRef = doc(db, 'tasks', id);
+      const taskSnapshot = await getDoc(taskRef);
+      if (taskSnapshot.exists()) {
+        const updatedStatus = !taskSnapshot.data().done;
+        await setDoc(taskRef, { done: updatedStatus }, { merge: true });
+        const updatedTasks = tasks.map((task) => {
+          if (task.id === id) {
+            return { ...task, done: updatedStatus };
+          }
+          return task;
+        });
+        setTasks(updatedTasks);
+
+        setMessage('Updating... Task updated!');
+        setTimeout(() => {
+          setMessage('');
+        }, 3000); // Hide the alert after 3 seconds
+      }
+    } catch (error) {
+      console.error('Error toggling task status:', error);
+    }
+  };
+
+  // Removes a task from the list and updates Firestore.
+  const handleTaskRemove = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'tasks', id));
+      const filteredTasks = tasks.filter((task) => task.id !== id);
+      setTasks(filteredTasks);
+      setMessage('Updating... Task removed!');
+      setTimeout(() => {
+        setMessage('');
+      }, 3000); // Hide the alert after 3 seconds
+    } catch (error) {
+      console.error('Error removing task:', error);
+    }
+  };
+
+  // add task to the list
+  const handleAddTask = async (description, status) => {
+    try {
+      const docRef = await addDoc(collection(db, 'tasks'), {
         description: description,
         done: status === 'completed'
-      }
-    ]);
+      });
+      const newTask = { id: docRef.id, description: description, done: status === 'completed' };
+      setTasks([...tasks, newTask]);
+      setMessage('Saving... Task added!');
+      setTimeout(() => {
+        setMessage('');
+      }, 3000); // Hide the alert after 3 seconds
+    } catch (error) {
+      console.error('Error adding task:', error);
+      setMessage('Error adding task:', error);
+      setTimeout(() => {
+        setMessage('');
+      }, 3000); // Hide the alert after 3 seconds
+    }
   }
-
 
   return (
     <div className='main'>
       <Header></Header>
       <div className='container'>
-
+        {message && <CustomAlert message={message} />}
         <Routes>
           <Route path="/" element={<Tasks tasks={tasks} onStatusChange={handleStatusChange} onTaskRemove={handleTaskRemove} onClearTasks={handleClearTasks} />} />
           <Route path="/add" element={<Form onAddTask={handleAddTask} />} />
