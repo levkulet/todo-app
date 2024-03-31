@@ -7,17 +7,29 @@
     align-items: center;
 }
 
-.loading {
-    //display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-size: 32px;
-    color: #333;
-    //background-color: #f8f8f8;
+.loading-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full height of the viewport */
+    width: 100%;
   }
   
-
+  .loading {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    padding: 20px;
+    margin: 20px;
+  }
+  
+  .loading img {
+    display: block; /* Ensure the image is a block element */
+    margin: 0 auto; /* Center the image horizontally */
+    max-width: 300px;
+    margin: 40px;
+  }
+  
 /* .container > div {
     flex-grow: 0; /* Ensure the divs don't grow to fill available space 
 } */

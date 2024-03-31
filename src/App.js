@@ -14,6 +14,7 @@ import HelpStatus from './components/Help/HelpStatus.js';
 import CustomAlert from './components/CustomAlert/CustomAlert.js';
 import { collection, getDocs, } from 'firebase/firestore';
 import { db } from './utils/api/firebaseConfig.js';
+import Hourglass from './assets/Hourglass.gif'
 
 
 function App() {
@@ -58,14 +59,15 @@ function App() {
   // Removes all tasks from the list and updates Firestore.
   const handleClearTasks = async () => {
     setTasks([]);
-    setMessage('Tasks Cleared!');
-        setTimeout(() => {
-          setMessage('');
-        }, 3000); // Hide the alert after 3 seconds
+    setMessage('Tasks Cleared! Click Add to create new tasks.');
+    setTimeout(() => {
+      setMessage('');
+    },4000); // Hide the alert after 3 seconds
   };
 
   // Toggles a task status and updates Firestore.
   const handleStatusChange = async (id) => {
+    setMessage('Updating Status...');
     const updatedTasks = [...tasks];
 
     updatedTasks.forEach((task) => {
@@ -75,9 +77,9 @@ function App() {
     });
     setTasks(updatedTasks);
     setMessage('Task Updated');
-        setTimeout(() => {
-          setMessage('');
-        }, 3000); // Hide the alert after 3 seconds
+    setTimeout(() => {
+      setMessage('');
+    }, 3000); // Hide the alert after 3 seconds
   };
 
   // Removes a task from the list and updates Firestore.
@@ -86,18 +88,18 @@ function App() {
     setTasks(newTasks);
 
     setMessage('Task Removed!');
-        setTimeout(() => {
-          setMessage('');
-        }, 3000); // Hide the alert after 3 seconds
+    setTimeout(() => {
+      setMessage('');
+    }, 3000); // Hide the alert after 3 seconds
   };
 
   // add task to the list
-  const handleAddTask = async (newTask ) => {
+  const handleAddTask = async (newTask) => {
     setTasks([...tasks, newTask]);
-    setMessage('Task Added!');
-        setTimeout(() => {
-          setMessage('');
-        }, 3000); // Hide the alert after 3 seconds
+    setMessage('New Task Added!');
+    setTimeout(() => {
+      setMessage('');
+    }, 3000); // Hide the alert after 3 seconds
   }
 
 
@@ -109,7 +111,13 @@ function App() {
         {
           isLoading ?
             (
-              <div className='loading'> Loading ...</div>
+              <div className='loading-container'>
+                <div className='loading'>
+                  <img src={Hourglass} alt='Loading' />
+                  <span>Loading ...</span>
+                </div>
+              </div>
+
             ) : (
 
               <Routes>
@@ -130,7 +138,7 @@ function App() {
               </Routes>
 
             )}
-                          
+
       </div >
     </div >
   );

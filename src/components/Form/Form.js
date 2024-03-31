@@ -7,7 +7,7 @@ import { dbTasksCollection } from "../../utils/api/firebaseConfig";
 function Form({ onAddTask }) {
 
     const [description, setDescription] = useState('');
-    const [done, setDone] = useState('open');
+    const [done, setDone] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleFormSubmission = (event) => {
@@ -21,9 +21,9 @@ function Form({ onAddTask }) {
             
             const newTask = {description,done};
 
-            addDoc(dbTasksCollection, newTask).then((docRef) => {
-                console.log('Task Added:', docRef);
-                onAddTask({ id: docRef.id, description,done });
+            addDoc(dbTasksCollection, newTask).then((tasksRef) => {
+                console.log('Task Added:', tasksRef);
+                onAddTask({ id: tasksRef.id, description,done });
 
             //reset formƒ
             setDescription('')
@@ -69,8 +69,8 @@ function Form({ onAddTask }) {
                     onChange={(event) => setDone(event.target.value)}
                     className="formInputStatus"
                 >
-                    <option value="open" className="taskOpen"> Open</option>
-                    <option value="completed" className="taskCompleted"> Completed</option>
+                    <option value="false" className="taskOpen"> Open</option>
+                    <option value="true" className="taskCompleted"> Completed</option>
                 </select>
 
             </label>

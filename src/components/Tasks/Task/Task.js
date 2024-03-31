@@ -27,9 +27,9 @@ function Task(props) {
         const id = props.task.id;
         //props.onTaskRemove(id);
 
-        const docRef = doc(db, 'tasks', id);
+        const tasksRef = doc(db, 'tasks', id);
         
-        deleteDoc(docRef)
+        deleteDoc(tasksRef)
             .then(() => {
                 props.onTaskRemove(id);
             })
